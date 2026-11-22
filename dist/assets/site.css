@@ -409,3 +409,7 @@ footer { background:#0e1022; }
 .skill-card p { margin-block: 8px 10px; color: var(--muted); }
 .skill-card a { color: var(--cobalt); font-size: .9rem; }
 .credentials #skills-title { grid-column: 1 / -1; }
+
+.about-intro { display: grid; gap: 12px; color: var(--muted); }
+.about-intro > a { width: fit-content; }
+.about-intro a { color: var(--cobalt); }
