@@ -1,3 +1,10 @@
+const projectLogos = {
+  outcomes: ['outcomes.webp', 'Outcomes'],
+  talentscreen: ['employmate.svg', 'EmployMate'],
+  rcg: ['rcg.svg', 'RCG Markets', 'dark'],
+  aawealth: ['aawealth.webp', 'AA Wealth Management'],
+};
+
 // The existing case cards supply the titles, categories and links for every chapter.
 export function createProjectReel({ cards, scheduleUpdate, jumpTo }) {
   const section = document.querySelector('.work');
@@ -11,6 +18,10 @@ export function createProjectReel({ cards, scheduleUpdate, jumpTo }) {
   video.after(outgoing);
   const title = frame.querySelector('.reel-title');
   const category = frame.querySelector('.reel-category');
+  const brand = frame.querySelector('.reel-brand');
+  const logo = brand.querySelector('img');
+  logo.addEventListener('load', () => { brand.hidden = false; });
+  logo.addEventListener('error', () => { brand.hidden = true; });
   const position = frame.querySelector('.reel-position');
   const progress = frame.querySelector('.reel-meter i');
   const previous = frame.querySelector('[data-action="previous"]');
@@ -81,6 +92,20 @@ export function createProjectReel({ cards, scheduleUpdate, jumpTo }) {
     title.href = active.href;
     title.setAttribute('aria-label', 'Read the ' + active.name + ' case study');
     category.textContent = active.category;
+    brand.hidden = true;
+    const projectLogo = projectLogos[active.slug];
+    if (projectLogo) {
+      const [file, label, surface = 'light'] = projectLogo;
+      brand.dataset.surface = surface;
+      logo.alt = label;
+      if (logo.getAttribute('src') !== '/assets/brands/' + file) {
+        logo.src = '/assets/brands/' + file;
+      } else {
+        brand.hidden = !logo.complete || !logo.naturalWidth;
+      }
+    } else {
+      logo.removeAttribute('src');
+    }
     poster.src = '/assets/reel/' + active.slug + '.webp';
     desiredTime = 0;
   }

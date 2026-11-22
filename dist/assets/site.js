@@ -23,6 +23,7 @@ function updateScrollVisuals() {
   frame = 0;
   const scrollRange = root.scrollHeight - innerHeight;
   progress.style.setProperty('--progress', scrollRange > 0 ? scrollY / scrollRange : 0);
+  updateNavigation();
   projectReel.update(motionEnabled);
   if (!motionEnabled) return;
   const distance = scrollY - heroVisual.offsetTop;
@@ -218,4 +219,17 @@ if (typeof dialog.showModal === 'function') {
   addEventListener('popstate', syncCaseStudy);
   addEventListener('hashchange', syncCaseStudy);
   syncCaseStudy();
+}
+
+const sectionLinks = [...document.querySelectorAll('.masthead nav a')].map(link => ({
+  link, section: document.querySelector(link.hash)
+}));
+function updateNavigation() {
+  const threshold = document.querySelector('.masthead').offsetHeight + innerHeight * .25;
+  const atEnd = scrollY + innerHeight >= document.documentElement.scrollHeight - 2;
+  const current = atEnd ? sectionLinks.at(-1) : sectionLinks.filter(({section}) => section.getBoundingClientRect().top <= threshold).at(-1);
+  for (const entry of sectionLinks) {
+    if (entry === current) entry.link.setAttribute('aria-current', 'location');
+    else entry.link.removeAttribute('aria-current');
+  }
 }

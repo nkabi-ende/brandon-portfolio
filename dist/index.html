@@ -23,7 +23,8 @@
   <header class="masthead">
     <div class="header-inner">
       <a class="wordmark" href="#top" aria-label="Brandon TJ Nkabinde, home">
-        <span class="brand-mark" aria-hidden="true">BN</span><span>Brandon TJ Nkabinde</span>
+        <span class="brand-mark" aria-hidden="true"><i>B</i><b>N</b></span>
+        <span class="brand-name">Brandon TJ <em>Nkabinde</em></span>
       </a>
       <nav aria-label="Main navigation">
         <a href="#work">Work</a><a href="#about">About</a><a class="nav-contact" href="#contact">Contact</a>
@@ -69,7 +70,7 @@
               <img alt="" decoding="async" loading="lazy" width="768" height="512">
               <video muted playsinline preload="auto" disablepictureinpicture></video>
             </div>
-            <div class="reel-caption"><span class="reel-category"></span><a class="reel-title" href="#case-verdict">Verdict</a></div>
+            <div class="reel-caption"><div class="reel-brand" hidden><img alt=""></div><span class="reel-category"></span><a class="reel-title" href="#case-verdict">Verdict</a></div>
             <button type="button" class="reel-play" data-action="play" aria-pressed="false" hidden>Play scene</button>
           </div>
           <div class="reel-controls">
@@ -309,12 +310,20 @@
     </article></section>
     <section class="contact" id="contact" aria-labelledby="contact-title">
       <div class="wrap contact-inner">
-        <div><p class="eyebrow">Contact</p><h2 id="contact-title">Brandon TJ Nkabinde</h2><p>Product specialist and builder · Durban, KwaZulu-Natal</p></div>
-        <div class="contact-links"><a class="button contact-cta" href="mailto:brandon@kznaisolutions.com">Email Brandon</a><a class="contact-phone" href="tel:+27716865256">071 686 5256</a><a class="contact-link" href="https://www.linkedin.com/in/brandon-tj-nkabinde/" target="_blank" rel="noopener noreferrer">LinkedIn</a></div>
+        <div class="contact-signature">
+          <p class="contact-kicker">Get in touch</p>
+          <h2 id="contact-title">Brandon TJ<br><em>Nkabinde</em><span aria-hidden="true">.</span></h2>
+          <p class="signature-location">Product specialist <span> / </span> Durban, KwaZulu-Natal</p>
+        </div>
+        <div class="contact-links">
+          <a href="mailto:brandon@kznaisolutions.com"><small>Email</small><strong>brandon@kznaisolutions.com</strong></a>
+          <a href="tel:+27716865256"><small>Phone</small><strong>071 686 5256</strong></a>
+          <a href="https://www.linkedin.com/in/brandon-tj-nkabinde/" target="_blank" rel="noopener noreferrer"><small>LinkedIn</small><strong>View profile</strong></a>
+        </div>
       </div>
     </section>
   </main>
-  <footer><div class="wrap footer-inner"><span>© 2026 Brandon TJ Nkabinde</span><button id="motion-control" type="button" hidden>Motion on</button><a href="#top">Back to top</a></div></footer>
+  <footer><div class="wrap footer-inner"><span>© 2026 Brandon TJ Nkabinde</span><button id="motion-control" type="button" hidden>Motion on</button><a class="return-link" href="#top">Back to top</a></div></footer>
   <dialog id="case-dialog" aria-labelledby="dialog-heading" data-lenis-prevent>
     <div class="dialog-top"><button class="case-close" type="button" aria-label="Close case study">Close <span aria-hidden="true">×</span></button></div>
     <div id="dialog-content"></div>

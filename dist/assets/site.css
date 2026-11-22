@@ -306,3 +306,72 @@ footer { background: var(--navy); color: #d8def5; border-top: 1px solid #37405e;
 .with-reel .project-card:has(.project-destination) .project-text { padding-bottom: 0; }
 .with-reel .project-destination { margin: 0 4px 9px; }
 .source-link { display: inline-block; margin-top: 4px; color: var(--cobalt); font-size: .9rem; text-decoration: underline; text-underline-offset: 3px; }
+
+/* The offset initials and cut corners repeat on the contact signature. */
+.masthead { background: color-mix(in srgb,var(--paper) 94%,transparent); border-color: #15172723; }
+.wordmark { gap: 12px; }
+.brand-mark { position: relative; display: flex; align-items: center; justify-content: center; width: 44px; height: 43px; border-radius: 0; clip-path: polygon(0 0,100% 0,100% 73%,76% 100%,0 100%); background: var(--navy); }
+.brand-mark i,.brand-mark b { font: italic 700 24px/1 Georgia,serif; letter-spacing: -.16em; }
+.brand-mark b { color: white; margin-top: 7px; margin-right: 4px; }
+.brand-name { font-size: 1.12rem; letter-spacing: -.055em; line-height: 1; }
+.brand-name em { font: italic 1.18em/1 Georgia,serif; color: #343fa9; }
+.masthead nav { gap: clamp(14px,2.4vw,34px); }
+.masthead nav a { position: relative; }
+.masthead nav a:not(.nav-contact)::after { content: ''; position: absolute; inset: auto 0 6px; height: 2px; background: var(--cobalt); transform: scaleX(0); transform-origin:left; }
+.masthead nav a:is(:hover,:focus-visible,[aria-current])::after { transform: scaleX(1); }
+.masthead .nav-contact { border: 0; border-radius: 5px; padding: 0 15px; gap: 9px; background: var(--navy); color: white; }
+.nav-contact::before { content:''; width: 13px; height: 10px; border: 1.5px solid var(--lime); background: linear-gradient(34deg,transparent 47%,var(--lime) 50% 58%,transparent 61%) left top / 51% 75% no-repeat,linear-gradient(-34deg,transparent 47%,var(--lime) 50% 58%,transparent 61%) right top / 51% 75% no-repeat; }
+.masthead .nav-contact:is(:hover,:focus-visible,[aria-current]) { background:#34409f; }
+.reading-progress { height:1px; }
+.contact { position:relative; overflow:clip; isolation:isolate; background:radial-gradient(ellipse at 9% 118%,#2b315f,transparent 59%),#111429; }
+.contact::before { content:''; position:absolute; z-index:-1; width:clamp(320px,51vw,800px); aspect-ratio:1; border-radius:50%; left:12%; top:22%; transform:rotate(-32deg) scaleX(.59); background:repeating-radial-gradient(circle,transparent 0 11px,#8a9bff29 11.5px 12.5px,transparent 13px 19px); mask-image:linear-gradient(120deg,#000,transparent 80%); }
+.contact-inner { grid-template-columns: 1.15fr 1fr; align-items:center; gap:clamp(30px,7vw,110px); padding-block:clamp(45px,6.5vw,95px); }
+.contact-kicker { display:flex; align-items:center; gap:12px; color:var(--lime); font:700 .88rem/1.3 ui-monospace,monospace; letter-spacing:.08em; text-transform:uppercase; }
+.contact-kicker::before { content:''; width:36px; height:9px; background:repeating-linear-gradient(115deg,var(--lime) 0 2px,transparent 2px 6px); }
+.contact h2 { font-size:clamp(3.55rem,6.8vw,7rem); line-height:.86; margin:24px 0; letter-spacing:-.078em; }
+.contact h2 em { font-family:Georgia,serif; font-weight:normal; letter-spacing:-.065em; }
+.contact h2 span { color:var(--lime); }
+.signature-location span { margin:0 5px; color:var(--lime); }
+.contact-links { display:grid; gap:0; }
+.contact-links a { display:grid; gap:4px; align-content:center; min-height:68px; padding:10px 5px; border-top:1px solid #ffffff3c; }
+.contact-links a:last-child { border-bottom:1px solid #ffffff3c; }
+.contact-links small { color:#b8c2e0; font: .88rem/1 ui-monospace,monospace; }
+.contact-links strong { font-size:clamp(1rem,1.8vw,1.55rem); letter-spacing:-.03em; overflow-wrap:anywhere; }
+.contact-links a:is(:hover,:focus-visible) { color:var(--lime); border-top-color:var(--lime); }
+.motion .contact-links strong,.motion .masthead nav a::after { transition:transform .2s; }
+.motion .contact-links a:hover strong { transform:translateX(4px); }
+footer { background:#0e1022; }
+.footer-inner { justify-content:flex-start; gap:18px; padding-block:12px; }
+.footer-inner button { margin-left:auto; display:inline-flex; align-items:center; gap:8px; border:0; background:transparent; padding:6px 0; }
+.footer-inner button::before { content:''; width:20px; height:12px; border:1px solid #a9b2d1; border-radius:8px; background:radial-gradient(circle at 5px center,#a9b2d1 3px,transparent 3.5px); }
+.footer-inner button[aria-pressed="true"]::before { border-color:var(--lime); background:radial-gradient(circle at 13px center,var(--lime) 3px,transparent 3.5px); }
+.return-link { padding:8px 0 8px 17px; border-left:1px solid #565971; }
+.footer-inner button[hidden]+a { margin-left:auto; }
+@media(max-width:700px) {
+  .brand-name { max-width:none!important; display:grid; gap:1px; font-size:.91rem; }
+  .masthead .brand-mark { width:33px;height:36px; }
+  .brand-mark i,.brand-mark b { font-size:20px; }
+  .wordmark { gap:7px; }
+  .masthead nav { gap:12px; }
+  .masthead .nav-contact { padding-inline:10px; }
+  .contact-inner { grid-template-columns:1fr; gap:30px; }
+  .contact-links a { grid-template-columns: 68px minmax(0,1fr); column-gap: 9px; align-items:center; min-height:56px; }
+  .contact::before { left:25%;top:-4%; }
+  .footer-inner { gap:9px 14px; }
+}
+@media(max-width:420px) {
+  .nav-contact::before { display:none; }
+  .header-inner { gap: 9px; }
+  .footer-inner { display:grid; grid-template-columns:1fr auto; }
+  .footer-inner > span { grid-column:1/-1; }
+  .footer-inner button { margin:0; justify-self:start; }
+  .return-link { grid-column:2; }
+}
+
+.reel-brand { width: fit-content; max-width: 68%; min-height: 37px; display:grid; place-items:center; padding:5px 9px; margin-bottom:6px; background:#fbfaf6; border:1px solid #ffffff75; border-radius:5px; }
+.reel-brand[data-surface="dark"] { background:#171b2b; }
+.reel-brand img { display:block; width:auto; height:auto; max-width:100%; max-height:28px; }
+@media(max-width:700px) {
+  .reel-brand { min-height:29px; padding:3px 7px; margin-bottom:3px; }
+  .reel-brand img { max-height:21px; }
+}
