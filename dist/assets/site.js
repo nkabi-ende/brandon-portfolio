@@ -195,6 +195,15 @@ if (typeof dialog.showModal === 'function') {
       trigger = link;
       history.pushState({ portfolioCaseStudy: true }, '', fragment);
       syncCaseStudy();
+    } else if (dialog.contains(link)) {
+      const target = document.getElementById(fragment.slice(1));
+      if (!target) return;
+      event.preventDefault();
+      trigger = undefined;
+      dialog.close();
+      history.pushState(null, '', fragment);
+      target.focus({ preventScroll: true });
+      target.scrollIntoView();
     } else if (lenis) {
       const target = document.getElementById(fragment.slice(1));
       if (target) {
