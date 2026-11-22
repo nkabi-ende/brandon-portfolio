@@ -98,15 +98,15 @@ export function createProjectReel({ cards, scheduleUpdate, jumpTo }) {
       const [file, label, surface = 'light'] = projectLogo;
       brand.dataset.surface = surface;
       logo.alt = label;
-      if (logo.getAttribute('src') !== '/assets/brands/' + file) {
-        logo.src = '/assets/brands/' + file;
+      if (logo.getAttribute('src') !== './assets/brands/' + file) {
+        logo.src = './assets/brands/' + file;
       } else {
         brand.hidden = !logo.complete || !logo.naturalWidth;
       }
     } else {
       logo.removeAttribute('src');
     }
-    poster.src = '/assets/reel/' + active.slug + '.webp';
+    poster.src = './assets/reel/' + active.slug + '.webp';
     desiredTime = 0;
   }
 
@@ -187,7 +187,7 @@ export function createProjectReel({ cards, scheduleUpdate, jumpTo }) {
     play.hidden = !motion || failed;
     if (!motion && video.hasAttribute('src')) unload();
     if (!near || !motion || failed) return;
-    if (!video.hasAttribute('src')) video.src = '/assets/reel/' + active.slug + '.mp4';
+    if (!video.hasAttribute('src')) video.src = './assets/reel/' + active.slug + '.mp4';
     seek();
   }
 
