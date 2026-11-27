@@ -1,5 +1,3 @@
-import { createProjectReel } from './project-reel.js';
-
 const root = document.documentElement;
 const motionPreference = matchMedia('(prefers-reduced-motion: reduce)');
 const motionControl = document.querySelector('#motion-control');
@@ -10,6 +8,7 @@ const isWheelDevice = matchMedia('(pointer: fine)');
 let frame = 0;
 let lenis;
 let motionEnabled = false;
+let activePreview;
 
 function readMotionPreference() {
   try {
@@ -24,7 +23,6 @@ function updateScrollVisuals() {
   const scrollRange = root.scrollHeight - innerHeight;
   progress.style.setProperty('--progress', scrollRange > 0 ? scrollY / scrollRange : 0);
   updateNavigation();
-  projectReel.update(motionEnabled);
   if (!motionEnabled) return;
   const distance = scrollY - heroVisual.offsetTop;
   const limit = innerWidth <= 660 ? 16 : 28;
@@ -40,6 +38,7 @@ async function updateMotion() {
   const saved = readMotionPreference();
   motionEnabled = !motionPreference.matches && saved !== 'off';
   root.classList.toggle('motion', motionEnabled);
+  if (!motionEnabled && activePreview) stopPreview();
   motionControl.textContent = `Motion ${motionEnabled ? 'on' : 'off'}`;
   motionControl.setAttribute('aria-pressed', String(motionEnabled));
   if (!motionEnabled || !isWheelDevice.matches) {
@@ -94,36 +93,6 @@ if ('IntersectionObserver' in window) {
   });
 }
 
-const filterBox = document.querySelector('.filters');
-const projectList = document.querySelector('.projects');
-const filterButtons = [...filterBox.querySelectorAll('button')];
-const projectCards = [...document.querySelectorAll('.project-card')];
-const projectReel = createProjectReel({
-  cards: projectCards,
-  scheduleUpdate: scheduleScrollUpdate,
-  jumpTo(position) {
-    if (lenis) lenis.scrollTo(position, { immediate: true });
-    else window.scrollTo({ top: position, behavior: 'instant' });
-  }
-});
-const filterStatus = document.querySelector('#filter-status');
-filterBox.hidden = false;
-filterButtons.forEach((button) => {
-  button.addEventListener('click', () => {
-    const selection = button.dataset.filter;
-    filterButtons.forEach((item) => item.setAttribute('aria-pressed', String(item === button)));
-    projectList.classList.toggle('is-filtered', selection !== 'all');
-    let shown = 0;
-    projectCards.forEach((card) => {
-      card.hidden = selection !== 'all' && !card.dataset.category.split(' ').includes(selection);
-      if (!card.hidden) shown++;
-    });
-    projectReel.refresh();
-    filterStatus.textContent = `${shown} case studies shown.`;
-    scheduleScrollUpdate();
-  });
-});
-
 const stages = [...document.querySelectorAll('[data-stage]')];
 const stepNav = document.querySelector('.step-nav');
 stepNav.setAttribute('role', 'tablist');
@@ -165,7 +134,7 @@ function syncCaseStudy() {
     return;
   }
 
-  projectReel.stopPlayback();
+  stopPreview();
   const view = caseStudy.cloneNode(true);
   view.removeAttribute('id');
   view.querySelector('h2').id = 'dialog-heading';
@@ -207,6 +176,7 @@ if (typeof dialog.showModal === 'function') {
     } else if (lenis) {
       const target = document.getElementById(fragment.slice(1));
       if (target) {
+        if (fragment === '#work') showGallery(workLinks[0]);
         event.preventDefault();
         if (location.hash !== fragment) history.pushState(null, '', fragment);
         if (target.hasAttribute('tabindex')) target.focus({ preventScroll: true });
@@ -235,6 +205,73 @@ const masthead = document.querySelector('.masthead');
 const workSection = document.querySelector('#work');
 const sectionLinks = navigationTargets('.masthead nav a');
 const workLinks = navigationTargets('.work-nav a');
+const galleryStatus = document.querySelector('#gallery-status');
+let activeGallery;
+workSection.classList.add('gallery-ready');
+
+function stopPreview() {
+  activePreview?.pause();
+  activePreview = undefined;
+}
+
+document.querySelectorAll('video[data-preview]').forEach((video) => {
+  const tile = video.closest('.tile-main');
+  tile.addEventListener('pointerenter', async (event) => {
+    if (event.pointerType !== 'mouse' || !motionEnabled || navigator.connection?.saveData) return;
+    stopPreview();
+    activePreview = video;
+    if (!video.hasAttribute('src')) video.src = video.dataset.preview;
+    try {
+      await video.play();
+    } catch {
+      // Keep the poster visible when a motion preview cannot play.
+    }
+  });
+  tile.addEventListener('pointerleave', () => {
+    if (activePreview === video) stopPreview();
+  });
+  video.addEventListener('playing', () => video.classList.toggle('is-playing', video === activePreview));
+  video.addEventListener('pause', () => video.classList.remove('is-playing'));
+});
+document.addEventListener('visibilitychange', () => {
+  if (document.hidden) stopPreview();
+});
+
+function showGallery(selected) {
+  if (selected === activeGallery) return;
+  stopPreview();
+  activeGallery = selected;
+  for (const entry of workLinks) entry.section.hidden = entry !== selected;
+  highlightLocation(workLinks, selected);
+  const name = selected.link.textContent;
+  const count = selected.section.querySelectorAll('.tile').length;
+  galleryStatus.textContent = `${name}, ${count} ${count === 1 ? 'project' : 'projects'}.`;
+  scheduleScrollUpdate();
+}
+
+function syncGallery() {
+  const selected = workLinks.find(({ link }) => link.hash === location.hash);
+  if (selected) showGallery(selected);
+  else if (!activeGallery || !location.hash || location.hash === '#work') showGallery(workLinks[0]);
+}
+
+for (const entry of workLinks) {
+  entry.link.addEventListener('click', (event) => {
+    if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey || event.button > 0) return;
+    event.preventDefault();
+    event.stopPropagation();
+    if (location.hash !== entry.link.hash) history.pushState(null, '', entry.link.hash);
+    showGallery(entry);
+    if (lenis) lenis.scrollTo(workSection, { immediate: true });
+    else workSection.scrollIntoView();
+  });
+}
+addEventListener('popstate', syncGallery);
+addEventListener('hashchange', syncGallery);
+syncGallery();
+if (workLinks.some(({ link }) => link.hash === location.hash)) {
+  requestAnimationFrame(() => workSection.scrollIntoView());
+}
 
 function navigationTargets(selector) {
   return [...document.querySelectorAll(selector)].map((link) => ({
@@ -256,7 +293,4 @@ function updateNavigation() {
   const reached = ({ section }) => section.getBoundingClientRect().top <= threshold;
   highlightLocation(sectionLinks, atEnd ? sectionLinks.at(-1) : sectionLinks.filter(reached).at(-1));
 
-  const workBounds = workSection.getBoundingClientRect();
-  const inWork = workBounds.top <= threshold && workBounds.bottom > threshold;
-  highlightLocation(workLinks, inWork ? workLinks.filter(reached).at(-1) ?? workLinks[0] : undefined);
 }
