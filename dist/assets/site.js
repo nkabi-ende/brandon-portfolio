@@ -8,7 +8,6 @@ const isWheelDevice = matchMedia('(pointer: fine)');
 let frame = 0;
 let lenis;
 let motionEnabled = false;
-let activePreview;
 
 function readMotionPreference() {
   try {
@@ -38,7 +37,6 @@ async function updateMotion() {
   const saved = readMotionPreference();
   motionEnabled = !motionPreference.matches && saved !== 'off';
   root.classList.toggle('motion', motionEnabled);
-  if (!motionEnabled && activePreview) stopPreview();
   motionControl.textContent = `Motion ${motionEnabled ? 'on' : 'off'}`;
   motionControl.setAttribute('aria-pressed', String(motionEnabled));
   if (!motionEnabled || !isWheelDevice.matches) {
@@ -134,7 +132,6 @@ function syncCaseStudy() {
     return;
   }
 
-  stopPreview();
   const view = caseStudy.cloneNode(true);
   view.removeAttribute('id');
   view.querySelector('h2').id = 'dialog-heading';
@@ -209,37 +206,8 @@ const galleryStatus = document.querySelector('#gallery-status');
 let activeGallery;
 workSection.classList.add('gallery-ready');
 
-function stopPreview() {
-  activePreview?.pause();
-  activePreview = undefined;
-}
-
-document.querySelectorAll('video[data-preview]').forEach((video) => {
-  const tile = video.closest('.tile-main');
-  tile.addEventListener('pointerenter', async (event) => {
-    if (event.pointerType !== 'mouse' || !motionEnabled || navigator.connection?.saveData) return;
-    stopPreview();
-    activePreview = video;
-    if (!video.hasAttribute('src')) video.src = video.dataset.preview;
-    try {
-      await video.play();
-    } catch {
-      // Keep the poster visible when a motion preview cannot play.
-    }
-  });
-  tile.addEventListener('pointerleave', () => {
-    if (activePreview === video) stopPreview();
-  });
-  video.addEventListener('playing', () => video.classList.toggle('is-playing', video === activePreview));
-  video.addEventListener('pause', () => video.classList.remove('is-playing'));
-});
-document.addEventListener('visibilitychange', () => {
-  if (document.hidden) stopPreview();
-});
-
 function showGallery(selected) {
   if (selected === activeGallery) return;
-  stopPreview();
   activeGallery = selected;
   for (const entry of workLinks) entry.section.hidden = entry !== selected;
   highlightLocation(workLinks, selected);

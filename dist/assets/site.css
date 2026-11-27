@@ -459,7 +459,7 @@ footer { background:#0e1022; }
   background: #2f3158;
 }
 #featured .tile-media { aspect-ratio: auto; height: clamp(135px, 20vw, 296px); }
-.tile-media > img, .tile-media > video {
+.tile-media > img {
   display: block;
   position: absolute;
   width: 100%;
@@ -468,8 +468,6 @@ footer { background:#0e1022; }
   object-fit: cover;
   object-position: center;
 }
-.tile-media > video { opacity: 0; }
-.tile-media > video.is-playing { opacity: 1; }
 .tile-media[data-palette="mint"] { background: linear-gradient(135deg,#143f3c,#80ae9a); }
 .tile-media[data-palette="blue"] { background: linear-gradient(135deg,#2a4279,#5d718e); }
 .tile-media[data-palette="amber"] { background: linear-gradient(135deg,#472728,#b76744); }
@@ -568,3 +566,96 @@ footer { background:#0e1022; }
   .work-nav > a { min-height: 40px; padding-inline: 8px; font-size: .85rem; }
   .tile-actions a, .tile-details summary { min-height: 42px; padding-block: 9px; }
 }
+
+/* Original marks and archival product evidence share one consistent stage. */
+.brand-cover {
+  grid-template-columns: minmax(0, 1fr);
+  height: auto;
+  gap: 0;
+  padding: 0;
+}
+.brand-lockup, .brand-screens {
+  min-width: 0;
+  min-height: 0;
+  display: grid;
+  place-items: center;
+}
+.brand-lockup > img, .brand-screens > img { display: block; max-width: 100%; height: auto; }
+.brand-lockup { width: 100%; }
+.brand-cover[data-brand="verdict"] {
+  grid-template-columns: minmax(0, .58fr) minmax(0, 1fr);
+  background: #0b0b0e;
+  gap: 4%;
+  padding: 5%;
+}
+.brand-cover[data-brand="verdict"] .brand-lockup {
+  background: #f9f8f3;
+  padding: 12%;
+  border-radius: 6px;
+}
+.brand-cover[data-brand="verdict"] .brand-screens img {
+  width: auto;
+  max-height: 100%;
+  object-fit: contain;
+}
+.brand-cover[data-brand="edsocio"] {
+  grid-template-columns: minmax(0, .61fr) minmax(0, 1fr);
+  background: linear-gradient(130deg,#48346b,#211931);
+  padding-inline: 8%;
+  gap: 10%;
+}
+.brand-cover[data-brand="edsocio"] .brand-lockup {
+  width: min(100%,115px);
+  background: #f9f7f4;
+  padding: 8%;
+  border-radius: 9px;
+}
+.brand-cover[data-brand="edsocio"] .brand-screens {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8%;
+  height: 83%;
+}
+.brand-cover[data-brand="edsocio"] .brand-screens img {
+  width: min(45%, 100px);
+  max-height: 100%;
+  object-fit: contain;
+  border: 2px solid #100e18;
+  border-radius: 6px;
+  box-shadow: 0 5px 15px #09041470;
+}
+.brand-cover[data-brand="talentscreen"] {
+  background: linear-gradient(145deg,#b9c8f4,#7894df);
+  gap: 8px;
+  align-content: center;
+  padding: 7%;
+}
+.brand-cover[data-brand="talentscreen"] .brand-lockup {
+  justify-self: start;
+  width: clamp(90px, 28%, 150px);
+  padding: 5px;
+  border-radius: 4px;
+  background: #fbfbfc;
+}
+.brand-cover[data-brand="talentscreen"] .brand-screens img {
+  border-radius: 5px;
+  box-shadow: 0 7px 20px #222f674f;
+}
+.brand-cover[data-brand="fuelr"], .case-wordmark[data-brand="fuelr"] { background: #000; }
+.brand-cover[data-brand="rcg"], .case-wordmark[data-brand="rcg"] {
+  background: radial-gradient(ellipse at 50% 20%,#4c2561,#25132d 75%);
+}
+.brand-cover:is([data-brand="fuelr"],[data-brand="rcg"]) .brand-lockup { width: 57%; }
+.brand-cover[data-brand="logisync"] { background: linear-gradient(125deg,#254f50,#1b333e); }
+.case-media { margin: 15px 0 20px; }
+.case-media .brand-cover { border-radius: 11px; max-height: 320px; }
+.case-media figcaption { margin-top: 7px; font-size: .92rem; color: var(--muted); }
+.case-media figcaption a { text-decoration: underline; text-underline-offset: 3px; }
+.case-wordmark {
+  width: fit-content;
+  margin: 10px 0 15px;
+  padding: 13px 16px;
+  border-radius: 7px;
+}
+.case-wordmark img { display: block; width: 125px; height: auto; }
