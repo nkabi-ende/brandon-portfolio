@@ -2,12 +2,11 @@ const projectLogos = {
   outcomes: ['outcomes.webp', 'Outcomes'],
   talentscreen: ['employmate.svg', 'EmployMate'],
   rcg: ['rcg.svg', 'RCG Markets', 'dark'],
-  aawealth: ['aawealth.webp', 'AA Wealth Management'],
 };
 
 // The existing case cards supply the titles, categories and links for every chapter.
 export function createProjectReel({ cards, scheduleUpdate, jumpTo }) {
-  const section = document.querySelector('.work');
+  const section = document.querySelector('#apps');
   const frame = section.querySelector('.reel-frame');
   const poster = frame.querySelector('img');
   const video = frame.querySelector('video');
@@ -35,7 +34,7 @@ export function createProjectReel({ cards, scheduleUpdate, jumpTo }) {
       card,
       href: link.getAttribute('href'),
       slug: link.hash.slice('#case-'.length),
-      name: card.querySelector('h3').textContent,
+      name: card.querySelector('h4').textContent,
       category: card.querySelector('.card-eyebrow').textContent,
     };
   });
@@ -252,7 +251,6 @@ export function createProjectReel({ cards, scheduleUpdate, jumpTo }) {
   });
   section.classList.add('with-reel');
   frame.hidden = false;
-  section.querySelector('.section-head > p').textContent = 'Scroll to move through the project reel. Open a case study for my role, the work and the result.';
   refresh();
   if ('ResizeObserver' in window) {
     const observer = new ResizeObserver(() => {

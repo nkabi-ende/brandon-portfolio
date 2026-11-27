@@ -208,8 +208,9 @@ if (typeof dialog.showModal === 'function') {
       const target = document.getElementById(fragment.slice(1));
       if (target) {
         event.preventDefault();
-        history.pushState(null, '', fragment);
-        lenis.scrollTo(target, { offset: -88, duration: 0.85 });
+        if (location.hash !== fragment) history.pushState(null, '', fragment);
+        if (target.hasAttribute('tabindex')) target.focus({ preventScroll: true });
+        lenis.scrollTo(target, { duration: 0.85 });
       }
     }
   });
@@ -230,15 +231,32 @@ if (typeof dialog.showModal === 'function') {
   syncCaseStudy();
 }
 
-const sectionLinks = [...document.querySelectorAll('.masthead nav a')].map(link => ({
-  link, section: document.querySelector(link.hash)
-}));
-function updateNavigation() {
-  const threshold = document.querySelector('.masthead').offsetHeight + innerHeight * .25;
-  const atEnd = scrollY + innerHeight >= document.documentElement.scrollHeight - 2;
-  const current = atEnd ? sectionLinks.at(-1) : sectionLinks.filter(({section}) => section.getBoundingClientRect().top <= threshold).at(-1);
-  for (const entry of sectionLinks) {
+const masthead = document.querySelector('.masthead');
+const workSection = document.querySelector('#work');
+const sectionLinks = navigationTargets('.masthead nav a');
+const workLinks = navigationTargets('.work-nav a');
+
+function navigationTargets(selector) {
+  return [...document.querySelectorAll(selector)].map((link) => ({
+    link,
+    section: document.getElementById(link.hash.slice(1))
+  }));
+}
+
+function highlightLocation(links, current) {
+  for (const entry of links) {
     if (entry === current) entry.link.setAttribute('aria-current', 'location');
     else entry.link.removeAttribute('aria-current');
   }
+}
+
+function updateNavigation() {
+  const threshold = masthead.offsetHeight + innerHeight * .25;
+  const atEnd = scrollY + innerHeight >= root.scrollHeight - 2;
+  const reached = ({ section }) => section.getBoundingClientRect().top <= threshold;
+  highlightLocation(sectionLinks, atEnd ? sectionLinks.at(-1) : sectionLinks.filter(reached).at(-1));
+
+  const workBounds = workSection.getBoundingClientRect();
+  const inWork = workBounds.top <= threshold && workBounds.bottom > threshold;
+  highlightLocation(workLinks, inWork ? workLinks.filter(reached).at(-1) ?? workLinks[0] : undefined);
 }
